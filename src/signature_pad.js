@@ -151,10 +151,13 @@ var SignaturePad = (function (document) {
     };
 
     SignaturePad.prototype._createPoint = function (event) {
-        var rect = this._canvas.getBoundingClientRect();
+        var rect = this._canvas.getBoundingClientRect(),
+            width = rect.right - rect.left,
+            height = rect.bottom - rect.top;
+        
         return new Point(
-            event.clientX - rect.left,
-            event.clientY - rect.top
+            (event.clientX - rect.left) / width * this._canvas.width,
+            (event.clientY - rect.top) / height * this._canvas.height
         );
     };
 
@@ -237,7 +240,7 @@ var SignaturePad = (function (document) {
             widthDelta = endWidth - startWidth,
             drawSteps, width, i, t, tt, ttt, u, uu, uuu, x, y;
 
-        drawSteps = Math.floor(curve.length());
+        drawSteps = Math.ceil(curve.length());
         ctx.beginPath();
         for (i = 0; i < drawSteps; i++) {
             // Calculate the Bezier (x, y) coordinate for this step.
